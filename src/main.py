@@ -24,6 +24,14 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
                 
+            # --- СИСТЕМА СОХРАНЕНИЙ: Обработка клавиш F5 и F9 ---
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F5:
+                    game.save_current_game()  # Вызываем сохранение
+                elif event.key == pygame.K_F9:
+                    game.load_current_game()  # Вызываем загрузку
+            # ----------------------------------------------------
+                
             game.handle_event(event)
             
         game.update(dt) # Передаем dt в обновление игры

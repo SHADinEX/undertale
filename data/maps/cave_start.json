@@ -38,8 +38,22 @@
       1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
     ]
   },
-  "spawn": {"x": 3, "y": 7},
+  "spawn": {
+    "x": 3, 
+    "y": 7
+  },
   "triggers": [
-    {"rect": [18,7,1,2], "action": "battle", "enemy": "dust_bunny"}
+    {
+      "rect": [18, 7, 1, 2], 
+      "action": "battle", 
+      "enemy": "dust_bunny"
+    }
+  ],
+  "npcs": [
+    {
+      "x": 6,
+      "y": 6,
+      "dialog_id": "hermit"
+    }
   ]
 }
