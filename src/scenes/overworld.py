@@ -1,4 +1,3 @@
-# src/scenes/overworld.py
 import pygame
 import json
 from src.settings import TILE_SIZE
@@ -26,7 +25,7 @@ class OverworldScene:
         self.sprites = pygame.sprite.Group()
         self.sprites.add(self.player)
 
-        # --- Стр. 13: Инициализируем NPC и Триггеры ---
+        # --- Инициализируем NPC и Триггеры ---
         self.npc_group = pygame.sprite.Group()
         self.triggers = []
         self._load_map_objects()
@@ -118,7 +117,6 @@ class OverworldScene:
                     
                     # --- АУДИО: Звук начала разговора ---
                     self.game.audio.sfx('talk_blip')
-                    
                     break
                 except FileNotFoundError:
                     print(f"Ошибка: не найден файл data/dialogs/{npc.dialog_id}.json")
@@ -134,20 +132,20 @@ class OverworldScene:
             self.dialog.update()
 
     def _check_triggers(self):
-        """Стр. 13: Логика обработки наступания на зоны триггеров"""
+        """Логика обработки наступания на зоны триггеров с переключением сцен"""
         for trigger in self.triggers:
             if trigger["rect"].colliderect(self.player.rect):
                 
-                # Триггер БИТВЫ
+                # ⚔️ Триггер БИТВЫ
                 if trigger["action"] == "battle":
-                    self.mode = 'battle'
-                    enemy = trigger.get("enemy", "unknown")
+                    enemy = trigger.get("enemy", "dust_bunny")
                     print(f"[СОБЫТИЕ] Начат бой с {enemy} из data/enemies.json!")
                     
-                    # --- АУДИО: Переключаем фоновую музыку на боевую ---
-                    self.game.audio.play_music('battle_theme')
+                    # Передаем управление в менеджер сцен. Он сам создаст BattleScene
+                    self.game.change_scene("battle", enemy_id=enemy)
+                    return  # Мгновенно выходим, чтобы оверворлд заморозился
                 
-                # Триггер ПЕРЕХОДА (Warp)
+                # 🌀 Триггер ПЕРЕХОДА (Warp)
                 elif trigger["action"] == "warp":
                     next_map = trigger.get("map")
                     if next_map:
@@ -197,7 +195,6 @@ class OverworldScene:
                 s = pygame.Surface((tr_rect.width, tr_rect.height), pygame.SRCALPHA)
                 s.fill((0, 255, 0, 100))  # Зеленый с прозрачностью 100
                 screen.blit(s, (tr_rect.x, tr_rect.y))
-        # ---------------------------------------------------------------------
 
         # Рисуем окно диалога поверх, если режим соответствующий
         if self.mode == 'dialog':
